@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Pencil, Trash2, Check, X } from 'lucide-react';
+import { Pencil, Trash2, Check, X, GripVertical } from 'lucide-react';
 import { useTodoStore } from '../store/todoStore';
 import { Database } from '../types/supabase';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type Todo = Database['public']['Tables']['todos']['Row'];
 
@@ -14,6 +16,19 @@ export default function TodoItem({ todo }: TodoItemProps) {
   const [editedTitle, setEditedTitle] = useState(todo.title);
   
   const { updateTodo, deleteTodo } = useTodoStore();
+  
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition
+  } = useSortable({ id: todo.id });
+  
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  };
   
   const handleToggleComplete = () => {
     updateTodo(todo.id, { completed: !todo.completed });
@@ -42,7 +57,19 @@ export default function TodoItem({ todo }: TodoItemProps) {
   };
   
   return (
-    <div className={`flex items-center p-4 border-b ${todo.completed ? 'bg-gray-50' : 'bg-white'}`}>
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      className={`flex items-center p-4 border-b ${todo.completed ? 'bg-gray-50' : 'bg-white'}`}
+    >
+      <div 
+        {...attributes} 
+        {...listeners}
+        className="mr-2 cursor-grab touch-none"
+      >
+        <GripVertical size={18} className="text-gray-400" />
+      </div>
+      
       <input
         type="checkbox"
         checked={todo.completed}

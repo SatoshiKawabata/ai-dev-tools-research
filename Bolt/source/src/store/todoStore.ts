@@ -12,6 +12,7 @@ interface TodoState {
   addTodo: (title: string) => Promise<void>;
   updateTodo: (id: string, updates: { title?: string; completed?: boolean }) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
+  reorderTodos: (todos: Todo[]) => Promise<void>;
 }
 
 export const useTodoStore = create<TodoState>((set, get) => ({
@@ -26,7 +27,7 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       const { data, error } = await supabase
         .from('todos')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('position', { ascending: true });
       
       if (error) throw error;
       
@@ -44,15 +45,25 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       
       if (!user) throw new Error('User not authenticated');
       
+      // Get the highest position value
+      const todos = get().todos;
+      const highestPosition = todos.length > 0 
+        ? Math.max(...todos.map(todo => todo.position)) 
+        : -1;
+      
       const { data, error } = await supabase
         .from('todos')
-        .insert([{ title, user_id: user.id }])
+        .insert([{ 
+          title, 
+          user_id: user.id,
+          position: highestPosition + 1 
+        }])
         .select();
       
       if (error) throw error;
       
       set({ 
-        todos: [data[0] as Todo, ...get().todos],
+        todos: [...get().todos, data[0] as Todo],
         loading: false 
       });
     } catch (error: any) {
@@ -101,4 +112,35 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       set({ error: error.message, loading: false });
     }
   },
+  
+  reorderTodos: async (reorderedTodos: Todo[]) => {
+    try {
+      set({ loading: true, error: null });
+      
+      // Update local state immediately for responsive UI
+      set({ todos: reorderedTodos });
+      
+      // Prepare batch updates with new positions
+      const updates = reorderedTodos.map((todo, index) => ({
+        id: todo.id,
+        position: index
+      }));
+      
+      // Update each todo with its new position
+      for (const update of updates) {
+        const { error } = await supabase
+          .from('todos')
+          .update({ position: update.position })
+          .eq('id', update.id);
+        
+        if (error) throw error;
+      }
+      
+      set({ loading: false });
+    } catch (error: any) {
+      // Revert to original order on error
+      await get().fetchTodos();
+      set({ error: error.message, loading: false });
+    }
+  }
 }));

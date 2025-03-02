@@ -27,8 +27,16 @@ export default function Dashboard() {
       </header>
       
       <main>
-        <AddTodo />
-        <TodoList />
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Add New Task</h2>
+          <AddTodo />
+        </div>
+        
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Your Tasks</h2>
+          <p className="text-sm text-gray-500 mb-4">Drag and drop to reorder your tasks</p>
+          <TodoList />
+        </div>
       </main>
     </div>
   );

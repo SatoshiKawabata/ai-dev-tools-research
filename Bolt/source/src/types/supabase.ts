@@ -16,6 +16,7 @@ export interface Database {
           title: string
           completed: boolean
           user_id: string
+          position: number
         }
         Insert: {
           id?: string
@@ -23,6 +24,7 @@ export interface Database {
           title: string
           completed?: boolean
           user_id: string
+          position?: number
         }
         Update: {
           id?: string
@@ -30,6 +32,7 @@ export interface Database {
           title?: string
           completed?: boolean
           user_id?: string
+          position?: number
         }
       }
       profiles: {
