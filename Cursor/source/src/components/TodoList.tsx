@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Todo } from "@prisma/client"
+import { useState, useEffect } from "react";
+import { type Todo, type Prisma } from "@prisma/client";
 
 export function TodoList() {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState("")
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodo, setNewTodo] = useState("");
 
   useEffect(() => {
-    fetchTodos()
-  }, [])
+    fetchTodos();
+  }, []);
 
   const fetchTodos = async () => {
-    const response = await fetch("/api/todos")
-    const data = await response.json()
-    setTodos(data)
-  }
+    const response = await fetch("/api/todos");
+    const data = await response.json();
+    setTodos(data);
+  };
 
   const addTodo = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newTodo.trim()) return
+    e.preventDefault();
+    if (!newTodo.trim()) return;
 
     await fetch("/api/todos", {
       method: "POST",
@@ -27,11 +27,11 @@ export function TodoList() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ title: newTodo }),
-    })
+    });
 
-    setNewTodo("")
-    fetchTodos()
-  }
+    setNewTodo("");
+    fetchTodos();
+  };
 
   return (
     <div>
@@ -52,7 +52,7 @@ export function TodoList() {
       </form>
 
       <ul>
-        {todos.map((todo) => (
+        {todos.map((todo: Todo) => (
           <li key={todo.id} className="flex items-center mb-2">
             <input
               type="checkbox"
@@ -64,8 +64,8 @@ export function TodoList() {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({ completed: !todo.completed }),
-                })
-                fetchTodos()
+                });
+                fetchTodos();
               }}
               className="mr-2"
             />
@@ -76,8 +76,8 @@ export function TodoList() {
               onClick={async () => {
                 await fetch(`/api/todos/${todo.id}`, {
                   method: "DELETE",
-                })
-                fetchTodos()
+                });
+                fetchTodos();
               }}
               className="ml-auto bg-red-500 text-white px-2 py-1 rounded"
             >
@@ -87,5 +87,5 @@ export function TodoList() {
         ))}
       </ul>
     </div>
-  )
-} 
+  );
+}
