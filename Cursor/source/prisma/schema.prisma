@@ -11,6 +11,7 @@ model Todo {
   id        String   @id @default(cuid())
   title     String
   completed Boolean  @default(false)
+  order     Int      @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String
