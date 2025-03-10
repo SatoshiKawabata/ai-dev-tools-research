@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/todoapp
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todoapp
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
