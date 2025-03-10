@@ -21,3 +21,8 @@ export const deleteTodo = async (id) => {
     const response = await axios.delete(`${API_URL}/todos/${id}`);
     return response.data;
 };
+
+export const reorderTodos = async (todos) => {
+    const response = await axios.put(`${API_URL}/todos/reorder`, { todos });
+    return response.data;
+};
