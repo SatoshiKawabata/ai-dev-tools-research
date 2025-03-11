@@ -1,0 +1,15 @@
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  todos     Todo[]
+}
+
+model Todo {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  userId    Int
+  order     Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id])
+}

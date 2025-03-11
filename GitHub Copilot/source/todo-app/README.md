@@ -1,36 +1,86 @@
 # Todo App
 
-This is a simple Todo application built with TypeScript and Express. It includes user authentication and CRUD operations for managing todos.
+This is a simple Todo application built with TypeScript and Next.js. It allows users to manage their todos with features for adding, editing, deleting, and updating todos. The application also includes user authentication functionality.
+
+## Features
+
+- User registration and login
+- Add, edit, delete, and update todos
+- Persistent data storage using a database
+- Responsive design
+
+## Technologies Used
+
+- TypeScript
+- Next.js
+- Prisma (for database interactions)
+- NextAuth.js (for authentication)
+- CSS for styling
 
 ## Setup Instructions
 
-1. Clone the repository:
-   ```
+1. **Clone the Repository**
+
+   ```bash
    git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```
    cd todo-app
    ```
-3. Install dependencies:
-   ```
+
+2. **Install Dependencies**
+
+   Make sure you have Node.js installed. Then run:
+
+   ```bash
    npm install
    ```
-4. Set up the database (e.g., MongoDB, PostgreSQL) and update the connection details in `src/db.ts`.
-5. Run the application:
+
+3. **Set Up Environment Variables**
+
+   Copy the `.env.example` file to `.env` and fill in the required environment variables:
+
+   ```bash
+   cp .env.example .env
    ```
-   npm start
+
+4. **Set Up the Database**
+
+   Make sure you have a database set up (e.g., PostgreSQL, MySQL). Update the database connection string in the `.env` file.
+
+   Run the following command to create the database schema:
+
+   ```bash
+   npx prisma migrate dev --name init
    ```
 
-## Infrastructure Proposal
+5. **Run the Application**
 
-- Use a cloud provider (e.g., AWS, Azure) for hosting the application.
-- Use a managed database service (e.g., MongoDB Atlas, AWS RDS) for database persistence.
-- Implement a load balancer to distribute traffic as user numbers grow.
-- Use containerization (e.g., Docker) for easy deployment and scaling.
+   Start the development server:
 
-## Future Scalability Considerations
+   ```bash
+   npm run dev
+   ```
 
-- Implement microservices architecture to separate user authentication and todo management.
-- Use caching (e.g., Redis) to improve performance for frequently accessed data.
-- Consider using a message queue (e.g., RabbitMQ) for handling background tasks and improving responsiveness.
+   The application will be available at `http://localhost:3000`.
+
+## Docker Setup
+
+To run the application using Docker, you can use the provided `docker-compose.yml` file.
+
+1. **Build and Run Docker Containers**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will start the application and the database in separate containers.
+
+## Scalability Considerations
+
+- **Database**: Use a managed database service (e.g., AWS RDS, Azure SQL Database) to handle increased load and provide automatic scaling.
+- **Load Balancing**: As user traffic increases, consider using a load balancer to distribute requests across multiple instances of the application.
+- **Caching**: Implement caching strategies (e.g., Redis) to reduce database load and improve response times.
+- **Microservices**: As the application grows, consider breaking it into microservices for better maintainability and scalability.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
